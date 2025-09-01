@@ -1,0 +1,47 @@
+/* Background noise grid */
+body {
+  background-image: radial-gradient(transparent 1px, rgba(2, 6, 23, .4) 1px),
+    radial-gradient(transparent 1px, rgba(2, 6, 23, .35) 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+/* Hide scrollbar on gallery */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Tilt hover effect */
+.tilt {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.tilt:hover .tilt-inner {
+  transform: translateZ(14px) rotateX(3deg) rotateY(-3deg);
+}
+
+/* Navbar links */
+.navlink {
+  @apply px-3 py-2 text-sm font-semibold rounded-xl text-white/80 hover:text-white hover:bg-white/5;
+}
+
+.mitem {
+  @apply rounded-xl p-3 text-white/80 hover:text-white hover:bg-white/10;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0)
+  }
+
+  100% {
+    transform: translateX(-50%)
+  }
+}

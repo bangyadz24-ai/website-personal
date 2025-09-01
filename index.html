@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Puspa Cell — Konter Kuota & Pulsa</title>
+  <meta name="description"
+    content="Puspa Cell: Jual kuota internet, pulsa, paket data all operator. Harga bersaing, layanan cepat, buka setiap hari!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config: extend with custom animations
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { jakarta: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            brand: {
+              50: '#f9fafb', 100: '#ecfeff', 200: '#cffafe', 300: '#a5f3fc', 400: '#67e8f9',
+              500: '#22d3ee', 600: '#06b6d4', 700: '#0891b2', 800: '#0e7490', 900: '#164e63'
+            },
+          },
+          boxShadow: {
+            glow: '0 10px 40px rgba(34,211,238,.35)',
+            innerGlow: 'inset 0 0 30px rgba(34,211,238,.25)'
+          },
+          keyframes: {
+            floaty: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-14px)' } },
+            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+            blob: {
+              '0%': { transform: 'translate(0px,0px) scale(1)' },
+              '33%': { transform: 'translate(20px,-30px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px,20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px,0px) scale(1)' }
+            },
+            pulseRing: {
+              '0%': { transform: 'scale(0.9)', opacity: 0.7 },
+              '80%': { transform: 'scale(1.5)', opacity: 0 },
+              '100%': { opacity: 0 }
+            }
+          },
+          animation: {
+            floaty: 'floaty 6s ease-in-out infinite',
+            shimmer: 'shimmer 2.5s linear infinite',
+            blob: 'blob 12s ease-in-out infinite',
+            pulseRing: 'pulseRing 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite'
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(circle at 20% 10%, rgba(34,211,238,0.30), rgba(14,116,144,0.08) 40%, rgba(2,6,23,0) 65%)',
+            'sheen': 'linear-gradient(110deg, rgba(255,255,255,.06), rgba(255,255,255,.35) 45%, rgba(255,255,255,.06) 60%)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Subtle noise background */
+    body {
+      background-image: radial-gradient(transparent 1px, rgba(2, 6, 23, .4) 1px), radial-gradient(transparent 1px, rgba(2, 6, 23, .35) 1px);
+      background-size: 24px 24px, 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* Hide scrollbars on gallery row */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none
+    }
+
+    /* Tilt hover */
+    .tilt {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .tilt:hover .tilt-inner {
+      transform: translateZ(14px) rotateX(3deg) rotateY(-3deg);
+    }
+  </style>
+</head>
+
+<body class="font-jakarta text-slate-100 bg-slate-950 selection:bg-brand-500/30">
+  <!-- Floating blobs background -->
+  <div class="pointer-events-none fixed inset-0 -z-10 opacity-70">
+    <div class="absolute -top-24 -left-24 w-72 h-72 bg-brand-500 rounded-full blur-3xl mix-blend-screen animate-blob">
+    </div>
+    <div
+      class="absolute top-1/2 -right-16 w-80 h-80 bg-cyan-400 rounded-full blur-3xl mix-blend-screen animate-blob [animation-delay:2s]">
+    </div>
+    <div
+      class="absolute bottom-0 left-1/3 w-96 h-96 bg-sky-500 rounded-full blur-3xl mix-blend-screen animate-blob [animation-delay:4s]">
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-40">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div
+        class="mt-4 mb-4 flex items-center justify-between rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-inner shadow-brand-900/10">
+        <a href="#home" class="flex items-center gap-3 p-3">
+          <div class="relative">
+            <div class="absolute inset-0 rounded-full bg-brand-500/40 blur-md"></div>
+            <div
+              class="relative grid h-10 w-10 place-items-center rounded-full bg-slate-800 ring-1 ring-white/10 shadow-glow">
+              <span class="text-2xl">📶</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-extrabold tracking-tight">Puspa <span class="text-brand-400">Cell</span></p>
+            <p class="text-xs text-white/60 -mt-1">Kuota • Pulsa • PPOB</p>
+          </div>
+        </a>
+
+        <button id="menuBtn"
+          class="mr-2 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 lg:hidden">
+          <span class="sr-only">Menu</span>☰
+        </button>
+
+        <ul id="menu" class="hidden lg:flex items-center gap-1 p-1">
+          <li><a href="#layanan" class="navlink">Layanan</a></li>
+          <li><a href="#harga" class="navlink">Harga</a></li>
+          <li><a href="#galeri" class="navlink">Galeri</a></li>
+          <li><a href="#testi" class="navlink">Testimoni</a></li>
+          <li><a href="#faq" class="navlink">FAQ</a></li>
+          <li><a href="#kontak" class="navlink">Kontak</a></li>
+          <li class="ml-2">
+            <a target="_blank"
+              href="https://wa.me/6283899747242?text=Halo%20Puspa%20Cell!%20Saya%20ingin%20pesan%20paket%20kuota."
+              class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 font-semibold text-slate-900 shadow-glow hover:brightness-110 active:scale-[.98]">🟢
+              WhatsApp</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- mobile menu -->
+      <ul id="menuMobile"
+        class="hidden flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/80 p-3 backdrop-blur-xl lg:hidden">
+        <a class="mitem" href="#layanan">Layanan</a>
+        <a class="mitem" href="#harga">Harga</a>
+        <a class="mitem" href="#galeri">Galeri</a>
+        <a class="mitem" href="#testi">Testimoni</a>
+        <a class="mitem" href="#faq">FAQ</a>
+        <a class="mitem" href="#kontak">Kontak</a>
+      </ul>
+    </nav>
+  </header>
+
+  <style>
+    .navlink {
+      @apply px-3 py-2 text-sm font-semibold rounded-xl text-white/80 hover:text-white hover:bg-white/5
+    }
+
+    .mitem {
+      @apply rounded-xl p-3 text-white/80 hover:text-white hover:bg-white/10
+    }
+  </style>
+
+  <!-- HERO -->
+  <section id="home" class="relative overflow-hidden">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2">
+        <div>
+          <div
+            class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Buka Setiap Hari • Fast Response
+          </div>
+          <h1 class="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+            <span class="bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">Kuota Kencang,</span>
+            <span
+              class="block bg-gradient-to-r from-brand-300 via-cyan-400 to-sky-400 bg-clip-text text-transparent">Harga
+              Ramah Kantong</span>
+          </h1>
+          <p class="mt-4 max-w-xl text-white/70">Paket data all operator, pulsa, hingga bayar tagihan PPOB. Praktis,
+            cepat, dan terpercaya di <span class="font-semibold text-white">Puspa Cell</span>.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a href="#harga"
+              class="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-slate-900 px-5 py-3 font-semibold hover:bg-slate-800">
+              Lihat Harga
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </a>
+            <a target="_blank"
+              href="https://wa.me/628389977242?text=Halo%20Puspa%20Cell%2C%20saya%20ingin%20pesan%20paket%20kuota"
+              class="relative inline-flex items-center gap-3 rounded-xl bg-brand-500 px-6 py-3 font-extrabold text-slate-900 shadow-glow hover:brightness-110 active:scale-[.99]">
+              Pesan Sekarang
+              <span class="absolute -z-10 inset-0 rounded-xl bg-sheen bg-[length:200%_100%] animate-shimmer"></span>
+            </a>
+          </div>
+          <div class="mt-8 grid grid-cols-3 gap-4 text-center text-xs text-white/60">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur">
+              ✨ <span class="font-semibold text-white">Bergaransi</span>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur">
+              ⚡ <span class="font-semibold text-white">Proses 1–2 Menit</span>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur">
+              🛡️ <span class="font-semibold text-white">Aman & Terpercaya</span>
+            </div>
+          </div>
+        </div>
+        <!-- Mockup Phone -->
+        <div class="relative">
+          <div class="absolute -inset-10 -z-10 bg-gradient-radial opacity-90"></div>
+          <div class="mx-auto w-72 sm:w-80 tilt">
+            <div
+              class="tilt-inner relative aspect-[9/19] rounded-[2.2rem] border border-white/20 bg-gradient-to-br from-slate-800 to-slate-900 p-3 shadow-2xl shadow-cyan-500/10">
+              <div class="absolute -inset-1 rounded-[2.4rem] bg-gradient-to-r from-brand-500/30 to-cyan-400/30 blur-xl">
+              </div>
+              <div class="relative h-full rounded-[1.8rem] bg-slate-950 ring-1 ring-white/10 overflow-hidden">
+                <div class="absolute inset-x-0 top-0 z-10 mx-auto mt-2 h-6 w-1/2 rounded-full bg-slate-800"></div>
+                <div class="absolute inset-0">
+                  <!-- Animated bars -->
+                  <div class="absolute bottom-0 left-0 right-0 flex items-end gap-1 p-3">
+                    <div class="h-14 w-2 animate-[bounce_1.6s_ease-in-out_infinite] bg-cyan-400/70"></div>
+                    <div
+                      class="h-9 w-2 animate-[bounce_1.2s_ease-in-out_infinite] bg-brand-400/70 [animation-delay:.2s]">
+                    </div>
+                    <div
+                      class="h-16 w-2 animate-[bounce_1.5s_ease-in-out_infinite] bg-sky-400/70 [animation-delay:.1s]">
+                    </div>
+                    <div
+                      class="h-8 w-2 animate-[bounce_1.1s_ease-in-out_infinite] bg-cyan-300/70 [animation-delay:.3s]">
+                    </div>
+                  </div>
+                  <div class="absolute inset-0 grid place-items-center">
+                    <div
+                      class="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 backdrop-blur">
+                      Koneksi Stabil • 4G/5G Ready
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="pointer-events-none absolute -right-4 -top-4 grid h-20 w-20 place-items-center rounded-full bg-brand-500/20 shadow-glow backdrop-blur">
+            <div class="absolute h-20 w-20 rounded-full border border-brand-300/40 animate-pulseRing"></div>
+            <span class="text-2xl">⚡</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- marquee -->
+    <div class="relative border-y border-white/10 bg-white/5 py-2 text-sm text-white/70">
+      <div class="animate-[marquee_18s_linear_infinite] whitespace-nowrap [--gap:2rem]"
+        style="display:flex; gap:var(--gap)">
+        <span>Telkomsel • Indosat • Tri • XL/Axis • Smartfren • Paket Malam • Paket Edukasi • Paket Combo •
+          Voucher</span>
+        <span aria-hidden="true" class="opacity-60">Telkomsel • Indosat • Tri • XL/Axis • Smartfren • Paket Malam •
+          Paket Edukasi • Paket Combo • Voucher</span>
+      </div>
+    </div>
+    <style>
+      @keyframes marquee {
+        0% {
+          transform: translateX(0)
+        }
+
+        100% {
+          transform: translateX(-50%)
+        }
+      }
+    </style>
+  </section>
+
+  <!-- LAYANAN -->
+  <section id="layanan" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-8">
+      <h2 class="text-3xl font-extrabold">Layanan <span class="text-brand-400">Puspa Cell</span></h2>
+      <p class="mt-2 text-white/70">Semua kebutuhan digital Anda dalam satu konter.</p>
+    </header>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <!-- card -->
+      <div
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-inner shadow-black/20 backdrop-blur hover:shadow-glow reveal">
+        <div
+          class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-500/20 blur-2xl transition-transform group-hover:scale-125">
+        </div>
+        <p class="text-3xl">📱</p>
+        <h3 class="mt-3 text-lg font-bold">Paket Data All Operator</h3>
+        <p class="mt-1 text-sm text-white/70">Telkomsel, Indosat, Tri, XL/Axis, Smartfren.</p>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-inner shadow-black/20 backdrop-blur hover:shadow-glow reveal">
+        <div
+          class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-cyan-400/20 blur-2xl transition-transform group-hover:scale-125">
+        </div>
+        <p class="text-3xl">💡</p>
+        <h3 class="mt-3 text-lg font-bold">Pulsa & Top Up</h3>
+        <p class="mt-1 text-sm text-white/70">Pulsa reguler & e-money (OVO, GoPay, Dana).</p>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-inner shadow-black/20 backdrop-blur hover:shadow-glow reveal">
+        <div
+          class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-sky-400/20 blur-2xl transition-transform group-hover:scale-125">
+        </div>
+        <p class="text-3xl">🧾</p>
+        <h3 class="mt-3 text-lg font-bold">Pembayaran PPOB</h3>
+        <p class="mt-1 text-sm text-white/70">Token/Tagihan Listrik, PDAM, Internet, dan lainnya.</p>
+      </div>
+      <div
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-inner shadow-black/20 backdrop-blur hover:shadow-glow reveal">
+        <div
+          class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-emerald-400/20 blur-2xl transition-transform group-hover:scale-125">
+        </div>
+        <p class="text-3xl">🎮</p>
+        <h3 class="mt-3 text-lg font-bold">Top Up Game</h3>
+        <p class="mt-1 text-sm text-white/70">Mobile Legends, Free Fire, PUBG, dan lain-lain.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HARGA -->
+  <section id="harga" class="relative border-y border-white/10 bg-slate-900/40">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <header class="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-extrabold">Daftar Harga <span class="text-brand-400">Kuota</span></h2>
+          <p class="mt-2 text-white/70">Harga contoh — silakan sesuaikan dengan harga toko Anda.</p>
+        </div>
+        <div class="flex items-center gap-2 rounded-xl border border-white/10 bg-slate-800/60 p-2">
+          <label class="text-xs text-white/70">Filter Operator</label>
+          <select id="filterOp" class="rounded-lg bg-slate-900/80 p-2 text-sm">
+            <option value="all">Semua</option>
+            <option>Telkomsel</option>
+            <option>Indosat</option>
+            <option>Tri</option>
+            <option>XL/Axis</option>
+            <option>Smartfren</option>
+          </select>
+        </div>
+      </header>
+
+      <div id="priceGrid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Cards generated by JS -->
+      </div>
+
+      <div class="mt-8 text-center">
+        <a href="#kontak"
+          class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-white/90 hover:bg-white/10">
+          Butuh paket khusus? Hubungi kami →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERI -->
+  <section id="galeri" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-6">
+      <h2 class="text-3xl font-extrabold">Galeri <span class="text-brand-400">Promo & Tampilan</span></h2>
+      <p class="mt-2 text-white/70">Suasana konter & mockup desain feed promo.</p>
+    </header>
+
+    <div
+      class="no-scrollbar grid grid-flow-col auto-cols-[80%] gap-4 overflow-x-auto sm:auto-cols-[45%] md:auto-cols-[32%]">
+      <!-- gallery items -->
+      <figure
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur reveal">
+        <img class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+          src="aksesoris.jpg" alt="Etalase smartphone" />
+        <figcaption class="mt-2 text-sm text-white/70">Etalase perangkat & aksesori.</figcaption>
+      </figure>
+      <figure
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur reveal">
+        <img class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+          src="aksesoris3.png" alt="Customer service" />
+        <figcaption class="mt-2 text-sm text-white/70">Layanan cepat & ramah.</figcaption>
+      </figure>
+      <figure
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur reveal">
+        <img class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+          src="aksesoris2.webp" alt="Promo kuota" />
+        <figcaption class="mt-2 text-sm text-white/70">Owner Puspa CELL.</figcaption>
+      </figure>
+      <figure
+        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur reveal">
+        <img class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+          src="https://images.unsplash.com/photo-1555421689-43cad7100751?q=80&w=1600&auto=format&fit=crop"
+          alt="Koneksi internet" />
+        <figcaption class="mt-2 text-sm text-white/70">Internet stabil untuk semua.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- TESTIMONI -->
+  <section id="testi" class="relative border-y border-white/10 bg-slate-900/40">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <header class="mb-8">
+        <h2 class="text-3xl font-extrabold">Apa Kata <span class="text-brand-400">Pelanggan</span></h2>
+        <p class="mt-2 text-white/70">Terima kasih atas kepercayaan Anda 🙏</p>
+      </header>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <blockquote class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 backdrop-blur">
+          <p>“Pesan kuota Telkomsel, kurang dari 1 menit sudah masuk. Mantap!”</p>
+          <footer class="mt-3 text-sm text-white/60">— suci, Pelajar</footer>
+        </blockquote>
+        <blockquote class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 backdrop-blur">
+          <p>“Harga bersaing dan admin ramah. Recommended banget.”</p>
+          <footer class="mt-3 text-sm text-white/60">— oman, guru</footer>
+        </blockquote>
+        <blockquote class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 backdrop-blur">
+          <p>“Top up game kilat, sering ada promo juga.”</p>
+          <footer class="mt-3 text-sm text-white/60">— dodi, pelajar</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-8 text-center">
+      <h2 class="text-3xl font-extrabold">Pertanyaan yang Sering Diajukan</h2>
+      <p class="mt-2 text-white/70">Butuh info tambahan? Chat kami ya!</p>
+    </header>
+    <div class="space-y-4">
+      <details class="reveal group rounded-xl border border-white/10 bg-white/5 p-5">
+        <summary class="cursor-pointer select-none text-left font-semibold">Berapa lama proses pengisian kuota?
+        </summary>
+        <p class="mt-2 text-white/70">Umumnya 1–2 menit setelah pembayaran terverifikasi.</p>
+      </details>
+      <details class="reveal group rounded-xl border border-white/10 bg-white/5 p-5">
+        <summary class="cursor-pointer select-none text-left font-semibold">Apakah melayani semua operator?</summary>
+        <p class="mt-2 text-white/70">Ya, kami melayani Telkomsel, Indosat, Tri, XL/Axis, dan Smartfren.</p>
+      </details>
+      <details class="reveal group rounded-xl border border-white/10 bg-white/5 p-5">
+        <summary class="cursor-pointer select-none text-left font-semibold">Apakah bisa COD?</summary>
+        <p class="mt-2 text-white/70">Bisa untuk area sekitar konter. Silakan hubungi kami untuk konfirmasi.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- KONTAK -->
+  <section id="kontak" class="relative overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-brand-700/10"></div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <div
+        class="grid items-center gap-8 rounded-3xl border border-white/10 bg-slate-900/60 p-8 shadow-inner backdrop-blur lg:grid-cols-2">
+        <div>
+          <h2 class="text-3xl font-extrabold">Hubungi <span class="text-brand-400">Puspa Cell</span></h2>
+          <p class="mt-2 text-white/70">Siap membantu kebutuhan digital Anda. Klik tombol untuk chat langsung.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a target="_blank"
+              href="https://wa.me/628899747242?text=Halo%20Puspa%20Cell%2C%20saya%20ingin%20tanya%20paket%20kuota"
+              class="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-900 shadow-glow hover:brightness-110">WhatsApp</a>
+            <a href="tel:+628899747242"
+              class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white/90 hover:bg-white/10">Telepon</a>
+            <a href="mailto:bangyadz2@gmail.com"
+              class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white/90 hover:bg-white/10">Email</a>
+          </div>
+          <p class="mt-4 text-sm text-white/60">Alamat: Jl. parapatan.
+            ds.tanjung rasa
+            kec.patokbeusi
+            Kota subang
+            pinggir irigasi</p>
+        </div>
+        <form id="formPesan" class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <div class="grid gap-3">
+            <input required name="nama" placeholder="Nama"
+              class="rounded-xl border border-white/10 bg-slate-900/80 p-3" />
+            <input required name="nomor" placeholder="Nomor WhatsApp"
+              class="rounded-xl border border-white/10 bg-slate-900/80 p-3" />
+            <select name="operator" class="rounded-xl border border-white/10 bg-slate-900/80 p-3">
+              <option>Telkomsel</option>
+              <option>Indosat</option>
+              <option>Tri</option>
+              <option>XL/Axis</option>
+              <option>Smartfren</option>
+            </select>
+            <input name="paket" placeholder="Contoh: 15GB 30 Hari"
+              class="rounded-xl border border-white/10 bg-slate-900/80 p-3" />
+            <button
+              class="confetti relative mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-3 font-extrabold text-slate-900 shadow-glow hover:brightness-110">
+              Kirim Pesan
+              <span class="absolute -z-10 inset-0 rounded-xl bg-sheen bg-[length:200%_100%] animate-shimmer"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 py-10 text-center text-sm text-white/60">
+    <p>© <span id="year"></span> Puspa Cell • All rights reserved.</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Mobile menu toggle
+    const $ = (q, c = document) => c.querySelector(q);
+    const $$ = (q, c = document) => [...c.querySelectorAll(q)];
+    $('#menuBtn')?.addEventListener('click', () => $('#menuMobile').classList.toggle('hidden'));
+
+    // Year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('opacity-100', 'translate-y-0');
+          io.unobserve(e.target);
+        }
+      })
+    }, { threshold: 0.15 });
+    $$('.reveal').forEach(el => {
+      el.classList.add('opacity-0', 'translate-y-6', 'transition', 'duration-700');
+      io.observe(el);
+    });
+
+    // Price data (edit freely)
+    const prices = [
+      { op: 'Telkomsel', qty: '5GB', days: 7, price: 23000 },
+      { op: 'Telkomsel', qty: '15GB', days: 30, price: 58000 },
+      { op: 'Telkomsel', qty: '27GB', days: 30, price: 88000 },
+      { op: 'Indosat', qty: '5GB', days: 7, price: 20000 },
+      { op: 'Indosat', qty: '14GB', days: 30, price: 52000 },
+      { op: 'Indosat', qty: '30GB', days: 30, price: 88000 },
+      { op: 'Tri', qty: '8GB', days: 7, price: 18000 },
+      { op: 'Tri', qty: '20GB', days: 30, price: 48000 },
+      { op: 'Tri', qty: '40GB', days: 30, price: 79000 },
+      { op: 'XL/Axis', qty: '10GB', days: 15, price: 29000 },
+      { op: 'XL/Axis', qty: '20GB', days: 30, price: 59000 },
+      { op: 'XL/Axis', qty: '35GB', days: 30, price: 89000 },
+      { op: 'Smartfren', qty: '8GB', days: 10, price: 22000 },
+      { op: 'Smartfren', qty: '18GB', days: 30, price: 52000 },
+      { op: 'Smartfren', qty: '40GB', days: 30, price: 82000 },
+    ];
+
+    const priceGrid = $('#priceGrid');
+    const rupiah = n => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+
+    function renderPrices(filter = 'all') {
+      priceGrid.innerHTML = '';
+      prices.filter(p => filter === 'all' || p.op === filter).forEach((p, i) => {
+        const card = document.createElement('article');
+        card.className = 'group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-5 shadow-inner backdrop-blur tilt reveal';
+        card.innerHTML = `
+          <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full ${i % 2 ? 'bg-cyan-400/20' : 'bg-brand-500/20'} blur-2xl transition-transform group-hover:scale-125"></div>
+          <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+            <span>📶 ${p.op}</span>
+            <span class="h-1 w-1 rounded-full bg-white/30"></span>
+            <span>Aktif ${p.days} Hari</span>
+          </div>
+          <h3 class="tilt-inner text-2xl font-extrabold">${p.qty}</h3>
+          <p class="mt-1 text-3xl font-extrabold bg-gradient-to-r from-brand-300 to-sky-400 bg-clip-text text-transparent">${rupiah(p.price)}</p>
+          <button data-op="${p.op}" data-qty="${p.qty}" data-price="${p.price}" class="confetti mt-4 w-full rounded-xl bg-brand-500 px-4 py-2 font-bold text-slate-900 shadow-glow hover:brightness-110">Beli</button>
+        `;
+        priceGrid.appendChild(card);
+      });
+      // re-apply reveal observer
+      $$('.reveal').forEach(el => io.observe(el));
+    }
+
+    renderPrices();
+
+    // Filter
+    $('#filterOp').addEventListener('change', e => renderPrices(e.target.value));
+
+    // Quick order via WhatsApp & confetti
+    function orderWhatsApp({ op, qty, price, nama, nomor }) {
+      const text = encodeURIComponent(`Halo Puspa Cell!\nSaya ingin pesan paket:\nOperator: ${op}\nPaket: ${qty}\nHarga: ${rupiah(price)}\nNama: ${nama || '-'}\nNomor: ${nomor || '-'}`);
+      window.open(`https://wa.me/628899747242?text=${text}`, '_blank');
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.confetti');
+      if (!btn) return;
+      burstConfetti(btn);
+    })
+
+    priceGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-op]');
+      if (!btn) return;
+      const { op, qty, price } = btn.dataset;
+      orderWhatsApp({ op, qty, price });
+    })
+
+    $('#formPesan').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      burstConfetti(e.submitter || e.target.querySelector('button'));
+      orderWhatsApp({
+        op: fd.get('operator'),
+        qty: fd.get('paket') || 'Konsultasi Paket',
+        price: 0,
+        nama: fd.get('nama'),
+        nomor: fd.get('nomor')
+      });
+    })
+
+    // Simple confetti burst (no external libs)
+    function burstConfetti(el) {
+      const rect = el.getBoundingClientRect();
+      const canvas = document.createElement('canvas');
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      Object.assign(canvas.style, { position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 9999 });
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      const pieces = Array.from({ length: 80 }, (_, i) => ({
+        x: rect.left + rect.width / 2, y: rect.top + window.scrollY + rect.height / 2,
+        r: Math.random() * 6 + 4,
+        a: Math.random() * Math.PI * 2,
+        v: Math.random() * 4 + 3,
+        g: 0.15 + Math.random() * 0.1,
+        life: 60 + Math.random() * 30
+      }));
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.life--; p.v -= p.g; p.x += Math.cos(p.a) * p.v; p.y += Math.sin(p.a) * p.v + 2;
+          ctx.globalAlpha = Math.max(p.life / 90, 0);
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = ['#22d3ee', '#06b6d4', '#38bdf8', '#a5f3fc'][Math.floor(Math.random() * 4)]; ctx.fill();
+        });
+        if (pieces.some(p => p.life > 0)) requestAnimationFrame(tick); else canvas.remove();
+      }
+      tick();
+    }
+  </script>
+</body>
+
+</html>
